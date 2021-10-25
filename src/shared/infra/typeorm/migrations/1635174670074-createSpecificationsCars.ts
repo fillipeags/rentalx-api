@@ -5,7 +5,7 @@ import {
   TableForeignKey,
 } from "typeorm";
 
-export class createSpecificationsCars1635174670074
+export class CreateSpecificationsCars1616804636016
   implements MigrationInterface
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -60,6 +60,7 @@ export class createSpecificationsCars1635174670074
       "specifications_cars",
       "FKCarSpecification"
     );
+
     await queryRunner.dropForeignKey(
       "specifications_cars",
       "FKSpecificationCar"
