@@ -1,4 +1,5 @@
 import { CarsRepositoryInMemory } from "@modules/cars/repositories/in-memory/CarsRepositoryInMemory";
+import { AppError } from "@shared/errors/AppError";
 
 import { CreateCarUseCase } from "./CreateCarUseCase";
 
@@ -24,19 +25,19 @@ describe("Create car", () => {
     expect(car).toHaveProperty("id");
   });
 
-  it("should not be able to create a car with existing license plate", () => {
-    expect(async () => {
-      await createCarUseCase.execute({
-        name: "Name Car1",
-        description: "Description Car",
-        daily_rate: 100,
-        license_plate: "ABC-1234",
-        fine_amount: 60,
-        brand: "Brand",
-        category_id: "category",
-      });
+  it("should not be able to create a car with existing license plate", async () => {
+    await createCarUseCase.execute({
+      name: "Name Car1",
+      description: "Description Car",
+      daily_rate: 100,
+      license_plate: "ABC-1234",
+      fine_amount: 60,
+      brand: "Brand",
+      category_id: "category",
+    });
 
-      await createCarUseCase.execute({
+    await expect(
+      createCarUseCase.execute({
         name: "Name Car2",
         description: "Description Car",
         daily_rate: 100,
@@ -44,8 +45,8 @@ describe("Create car", () => {
         fine_amount: 60,
         brand: "Brand",
         category_id: "category",
-      });
-    });
+      })
+    ).rejects.toEqual(new AppError("Car Already Exists!"));
   });
 
   it("should be able to create a car with available ture by default", async () => {
